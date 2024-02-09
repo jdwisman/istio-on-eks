@@ -4,6 +4,9 @@ This section will demonstrate the steps needed to enable Mutual Transport Layer 
 
 By default, Istio will use mTLS for all workloads with proxies configured, however it will also allow plain text.  When the X-Forwarded-Client-Cert header is there, Istio will use mTLS, and when it is missing, it implies that the requests are in plain text.
 
+![image](https://github.com/jdwisman/istio-on-eks/assets/71530829/c9889622-26a5-4ed4-ac89-6721b4b1c356)
+
+
 <Add Steps to test this here, and see both mTLS and plain text by default>
 
 
