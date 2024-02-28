@@ -39,6 +39,33 @@ By default, Istio will use mTLS for all workloads with proxies configured, howev
 ![image](https://github.com/jdwisman/istio-on-eks/assets/71530829/c9889622-26a5-4ed4-ac89-6721b4b1c356)
 
 
+After the workshop is up and running from the Getting Started section, you should be able to check and see if mTLS is in Permissive mode (plain text) or Strict mode (encrypted).  Run this command to see which pods are running:
+
+```sh
+Admin:~ $ kubectl get pods -n workshop
+NAME                              READY   STATUS    RESTARTS   AGE
+catalogdetail-5896fff6b8-pxpdn    2/2     Running   0          157m
+catalogdetail2-7d7d5cd48b-8sl8k   2/2     Running   0          157m
+frontend-78f696695b-t49rv         2/2     Running   0          157m
+productcatalog-64848f7996-w7wm8   2/2     Running   0          157m
+Admin:~ $
+```
+
+And then choose a pod and run this command to see the "Workload mTLS mode":
+```sh
+Admin:~ $ istioctl x describe pod catalogdetail-5896fff6b8-pxpdn -n workshop
+Pod: catalogdetail-5896fff6b8-pxpdn
+   Pod Revision: default
+   Pod Ports: 3000 (catalogdetail), 15090 (istio-proxy)
+--------------------
+Service: catalogdetail
+   Port: http 3000/HTTP targets pod port 3000
+--------------------
+Effective PeerAuthentication:
+   Workload mTLS mode: PERMISSIVE
+Skipping Gateway information (no ingress gateway pods)
+```
+
 <Add Steps to test this here, and see both mTLS and plain text by default>
 
 
