@@ -32,14 +32,14 @@ Note: Do not execute the [Destroy](https://github.com/sridevi1209/istio-on-eks/b
 
 ## mTLS Enablement
 
-This section will demonstrate the steps needed to enable Mutual Transport Layer Security (mTLS) for peer authentication between workloads.
+This section will demonstrate the steps needed to validate and to force Mutual Transport Layer Security (mTLS) for peer authentication between workloads.
 
 By default, Istio will use mTLS for all workloads with proxies configured, however it will also allow plain text.  When the X-Forwarded-Client-Cert header is there, Istio will use mTLS, and when it is missing, it implies that the requests are in plain text.
 
 ![image](https://github.com/jdwisman/istio-on-eks/assets/71530829/c9889622-26a5-4ed4-ac89-6721b4b1c356)
 
 
-After the workshop is up and running from the Getting Started section, you should be able to check and see if mTLS is in Permissive mode (plain text) or Strict mode (encrypted).  Run this command to see which pods are running:
+After the workshop is up and running from the Getting Started section, you should be able to check and see if mTLS is in Permissive mode (uses mTLS when available but allows plain text) or Strict mode (mTLS required).  Run this command to see which pods are running:
 
 ```sh
 Admin:~ $ kubectl get pods -n workshop
@@ -66,12 +66,18 @@ Effective PeerAuthentication:
 Skipping Gateway information (no ingress gateway pods)
 ```
 
-<Add Steps to test this here, and see both mTLS and plain text by default>
+As you can see, by default Istio is in Permissive mode, so while connections will default to use mTLS, plain text will be accepted as well. We can check that mTLS is enabled in Kiali, by looking for the lock icon in the top banner.
+
+![Screenshot 2024-02-28 at 5 04 01 PM](https://github.com/jdwisman/istio-on-eks/assets/71530829/29cacd2b-ccbc-4359-a5a9-c4249d27f767)
+
+We can then check the status of each connection in Kiali. Navigate to the Graph tab and enable Security in the Display menu. Then you will see a Lock icon to show where mTLS encryption is happening in the traffic flow graph.
+
+![Screenshot 2024-02-28 at 5 10 47 PM](https://github.com/jdwisman/istio-on-eks/assets/71530829/ba49ab89-7db0-486d-8bf0-86f15807c5c5)
 
 
+If we want to force mTLS for all traffic, then we must enable STRICT mode.  Run the following command to force mTLS everywhere Istio is running.
 
-If we want to force mTLS for all traffic, then we must enable STRICT mode.
-
+```sh
 kubectl apply -f - <<EOF
 apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
@@ -82,4 +88,4 @@ spec:
   mtls:
     mode: STRICT
 EOF
-
+```
