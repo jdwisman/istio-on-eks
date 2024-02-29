@@ -53,7 +53,7 @@ Admin:~ $
 
 And then choose a pod and run this command to see the "Workload mTLS mode":
 ```sh
-Admin:~ $ istioctl x describe pod catalogdetail-5896fff6b8-pxpdn -n workshop
+$ istioctl x describe pod catalogdetail-5896fff6b8-pxpdn -n workshop
 Pod: catalogdetail-5896fff6b8-pxpdn
    Pod Revision: default
    Pod Ports: 3000 (catalogdetail), 15090 (istio-proxy)
@@ -62,7 +62,7 @@ Service: catalogdetail
    Port: http 3000/HTTP targets pod port 3000
 --------------------
 Effective PeerAuthentication:
-   Workload mTLS mode: PERMISSIVE
+   **Workload mTLS mode: PERMISSIVE**
 Skipping Gateway information (no ingress gateway pods)
 ```
 
@@ -88,4 +88,22 @@ spec:
   mtls:
     mode: STRICT
 EOF
+```
+
+Now, if we run the same istioctl command to check the mTLS status, we'll get this output instead.
+
+```
+$ istioctl x describe pod catalogdetail-5896fff6b8-pxpdn -n workshop
+Pod: catalogdetail-5896fff6b8-pxpdn
+   Pod Revision: default
+   Pod Ports: 3000 (catalogdetail), 15090 (istio-proxy)
+--------------------
+Service: catalogdetail
+   Port: http 3000/HTTP targets pod port 3000
+--------------------
+Effective PeerAuthentication:
+   **Workload mTLS mode: STRICT**
+Applied PeerAuthentication:
+   default.istio-system
+Skipping Gateway information (no ingress gateway pods)
 ```
