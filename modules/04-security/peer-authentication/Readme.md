@@ -62,7 +62,7 @@ Service: catalogdetail
    Port: http 3000/HTTP targets pod port 3000
 --------------------
 Effective PeerAuthentication:
-   **Workload mTLS mode: PERMISSIVE**
+   Workload mTLS mode: PERMISSIVE
 Skipping Gateway information (no ingress gateway pods)
 ```
 
@@ -102,8 +102,13 @@ Service: catalogdetail
    Port: http 3000/HTTP targets pod port 3000
 --------------------
 Effective PeerAuthentication:
-   **Workload mTLS mode: STRICT**
+   Workload mTLS mode: STRICT
 Applied PeerAuthentication:
    default.istio-system
 Skipping Gateway information (no ingress gateway pods)
 ```
+
+You can also check this by hovering your mouse over the Lock icon in the Kiali banner, which should now look like this:
+
+![Screenshot 2024-02-28 at 5 23 40 PM](https://github.com/jdwisman/istio-on-eks/assets/71530829/bb458794-ab5a-4db4-9ae9-fee023930bcf)
+
