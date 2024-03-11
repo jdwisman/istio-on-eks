@@ -2,33 +2,7 @@
 
 ## Prerequisites and Initial Setup
 
-Before we proceed to the rest of this post, we need to make sure that the prerequisites are correctly installed. When complete, we will have the Amazon EKS cluster with Istio and the sample application configured.
-
-First, clone the blog example repository:
-
-git clone https://github.com/aws-samples/istio-on-eks.git
-
-Then we need make sure to complete all the below steps. Note: These steps are from [Module 1 – Getting Started](https://github.com/aws-samples/istio-on-eks/tree/main/modules/01-getting-started) that was used in the first Istio blog Getting started with Istio on EKS.
-
-1. [Prerequisites](https://github.com/aws-samples/istio-on-eks/blob/main/modules/01-getting-started/README.md#prerequisites) – Install tools, set up Amazon EKS and Istio, configure istio-ingress and install Kiali using the [Amazon EKS Istio Blueprints for Terraform](https://aws-ia.github.io/terraform-aws-eks-blueprints/patterns/istio/) that we used in the first blog. 
-2. [Deploy](https://github.com/aws-samples/istio-on-eks/tree/main/modules/01-getting-started#deploy) – Deploy Product Catalog application resources and basic Istio resources using Helm.
-3. [Configure Kiali](https://github.com/aws-samples/istio-on-eks/tree/main/modules/01-getting-started#configure-kiali) – Port forward to Kiali dashboard and Customize the view on Kiali Graph.
-4. [Install istioctl](https://istio.io/latest/docs/ops/diagnostic-tools/istioctl/#install-hahahugoshortcode860s2hbhb) and add it to the $PATH
-
-NOTE: Do not proceed if you don’t get the below result using the following command:
-
-```sh
-kubectl get pods -n workshop
-```
-```
-NAME                              READY   STATUS    RESTARTS   AGE
-catalogdetail-658d6dbc98-q544p    2/2     Running   0          7m19s
-catalogdetail2-549877454d-kqk9b   2/2     Running   0          7m19s
-frontend-7cc46889c8-qdhht         2/2     Running   0          7m19s
-productcatalog-5b79cb8dbb-t9dfl   2/2     Running   0          7m19s
-```
-
-Note: Do not execute the [Destroy](https://github.com/sridevi1209/istio-on-eks/blob/network-resiliency/modules/01-getting-started/README.md#destroy) section in Module 1
+Please begin with Prerequisites listed in Module 4 Readme: https://github.com/istio-on-eks/tree/security/modules/04-security
 
 ## mTLS Enablement
 
