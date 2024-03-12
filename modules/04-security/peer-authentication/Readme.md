@@ -102,3 +102,23 @@ productcatalog   ClusterIP   172.20.138.232   <none>        5000/TCP   13d
 
 As you can see, the frontend service is running with cluster IP 172.20.3.138 in my environment (yours may be different).  We also need the Fully Qualified Domain Name (FQDN) of the service.  In Kubernetes, those are normally [service_name].[namespace].svc.cluster.local. So in this case, it would be frontend.workshop.svc.local.
 
+Now we can run a container image that includes network testing utilities such as curl:
+```
+kubectl run -i --tty curler --image=public.ecr.aws/k8m1l3p1/alpine/curler:latest --rm
+```
+
+Now we can send a request to port 9000, which should get rejected as we don't have the proper certificate to authenticate to mTLS:
+```
+# curl -v frontend.workshop.svc.cluster.local:9000
+*   Trying 172.20.3.138:9000...
+* Connected to frontend.workshop.svc.cluster.local (172.20.3.138) port 9000 (#0)
+> GET / HTTP/1.1
+> Host: frontend.workshop.svc.cluster.local:9000
+> User-Agent: curl/7.77.0
+> Accept: */*
+> 
+* Recv failure: Connection reset by peer
+* Closing connection 0
+curl: (56) Recv failure: Connection reset by peer
+```
+
