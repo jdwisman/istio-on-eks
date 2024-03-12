@@ -86,3 +86,19 @@ You can also check this by hovering your mouse over the Lock icon in the Kiali b
 
 ![Screenshot 2024-02-28 at 5 23 40 PM](https://github.com/jdwisman/istio-on-eks/assets/71530829/bb458794-ab5a-4db4-9ae9-fee023930bcf)
 
+
+
+## Validation
+
+Next we will run curl commands from another pod to test and verify that mTLS is enabled.  First we need to determine which pods are running so we know what to test.  We'll try the frontend pod, where we will need both the pod name as well as the corresponding Istio sidecar.
+
+```
+$ kubectl get svc -n workshop
+NAME             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+catalogdetail    ClusterIP   172.20.183.210   <none>        3000/TCP   13d
+frontend         ClusterIP   172.20.3.138     <none>        9000/TCP   13d
+productcatalog   ClusterIP   172.20.138.232   <none>        5000/TCP   13d
+```
+
+As you can see, the frontend service is running with cluster IP 172.20.3.138 in my environment (yours may be different).  We also need the Fully Qualified Domain Name (FQDN) of the service.  In Kubernetes, those are normally [service_name].[namespace].svc.cluster.local. So in this case, it would be frontend.workshop.svc.local.
+
