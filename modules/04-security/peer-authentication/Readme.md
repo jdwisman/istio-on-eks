@@ -90,7 +90,24 @@ You can also check this by hovering your mouse over the Lock icon in the Kiali b
 
 ## Validation
 
-Next we will run curl commands from another pod to test and verify that mTLS is enabled.  First we need to determine which pods are running so we know what to test.  We'll try the frontend pod, where we will need both the pod name as well as the corresponding Istio sidecar.
+Next we will run curl commands from another pod to test and verify that mTLS is enabled. While we already confirmed that configuration with the istioctl command, we need to look at debug logs to confirm that everything is working as expected. First we need to determine which pods are running so we know what to test. We'll try the frontend pod, where we will need both the pod name as well as the corresponding Istio sidecar. Let's get the full name of the pod, so we can enable debug logs on it. Note that your pod name will be different from mine.
+
+```
+$ kubectl get pods -n workshop
+NAME                              READY   STATUS    RESTARTS   AGE
+catalogdetail-5896fff6b8-pxpdn    2/2     Running   0          13d
+catalogdetail2-7d7d5cd48b-8sl8k   2/2     Running   0          13d
+frontend-78f696695b-t49rv         2/2     Running   0          13d
+productcatalog-64848f7996-w7wm8   2/2     Running   0          13d
+```
+
+Now, let's use the istioctl command to enable debug logs for the frontend pod.
+
+```
+$ istioctl pc log frontend-78f696695b-t49rv -n workshop --level debug
+```
+
+Next, lets find the specific service we want to test, in this case, frontend.
 
 ```
 $ kubectl get svc -n workshop
@@ -107,7 +124,8 @@ Now we can run a container image that includes network testing utilities such as
 kubectl run -i --tty curler --image=public.ecr.aws/k8m1l3p1/alpine/curler:latest --rm
 ```
 
-Now we can send a request to port 9000, which should get rejected as we don't have the proper certificate to authenticate to mTLS:
+Now we can send a request to port 9000, which should get rejected as we don't have the proper certificate to authenticate to mTLS. Note that the IP address that it resolves to should be the same as what we saw before.
+
 ```
 # curl -v frontend.workshop.svc.cluster.local:9000
 *   Trying 172.20.3.138:9000...
@@ -121,4 +139,10 @@ Now we can send a request to port 9000, which should get rejected as we don't ha
 * Closing connection 0
 curl: (56) Recv failure: Connection reset by peer
 ```
+Next, we need to view our debug logs.  While Envoy has an ssl.handshake statistic, its not directly queriable via envoy-proxy. However, by enabling debug logs, we can view the results of queries there.
 
+```
+$ kubectl logs -f frontend-78f696695b-t49rv -n workshop -c istio-proxy | grep tlsMode
+2024-03-14T22:03:26.779477Z     debug   envoy upstream external/envoy/source/common/upstream/upstream_impl.cc:426       transport socket match, socket tlsMode-disabled selected for host with address 10.0.6.92:14268       thread=14
+2024-03-14T22:03:26.779503Z     debug   envoy upstream external/envoy/source/common/upstream/upstream_impl.cc:426       transport socket match, socket tlsMode-istio selected for host with address 10.0.8.201:5000  thread=14
+```
