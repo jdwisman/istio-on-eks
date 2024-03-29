@@ -146,3 +146,13 @@ $ kubectl logs -f frontend-78f696695b-t49rv -n workshop -c istio-proxy | grep tl
 2024-03-14T22:03:26.779477Z     debug   envoy upstream external/envoy/source/common/upstream/upstream_impl.cc:426       transport socket match, socket tlsMode-disabled selected for host with address 10.0.6.92:14268       thread=14
 2024-03-14T22:03:26.779503Z     debug   envoy upstream external/envoy/source/common/upstream/upstream_impl.cc:426       transport socket match, socket tlsMode-istio selected for host with address 10.0.8.201:5000  thread=14
 ```
+
+## Leveraging Amazon Certificate Manager (ACM)
+
+Certificate management can present additional administrative overhead for Istio deployments. One way to simplify this is to use Amazon’s AWS Certificate Manager (ACM) to manage the TLS certs and just use annotations to allow ingressgateway to use those certs. In this section, we will try it out.
+
+
+First, we need a Certificate Authority. If you don't already have one, you can easily create one with AWS Private Certificate Authority (APCA). In the AWS Console, click on "Create a Private CA". Next, fill out the form and choose "Create CA". You then need to install the CA, by choosing "Actions" then "Install CA". Now you will be able to create certificates with ACM. You will then be able to see the CA in the console, like this:
+
+<img width="1093" alt="Screenshot 2024-03-29 at 2 25 25 PM" src="https://github.com/jdwisman/istio-on-eks/assets/71530829/b488137b-5df7-41e1-b685-9793af8ef745">
+
