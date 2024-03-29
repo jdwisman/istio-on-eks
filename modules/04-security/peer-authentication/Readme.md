@@ -167,9 +167,33 @@ NAME            TYPE           CLUSTER-IP    EXTERNAL-IP                        
 istio-ingress   LoadBalancer   172.20.58.1   k8s-istioing-istioing-dc506af4a2-d85559e68d4a31fd.elb.us-east-1.amazonaws.com   15021:32486/TCP,80:30979/TCP,443:31160/TCP   31d
 ```
 
-Next, we need to add the following annotations to the service. Create a file with the following information, copying in the ARN of your certificate:
+Next, we need to add the following annotations to the service. Create a file with the following information, replacing the ARN with the ARN of your certificate:
 
 ```
-kubectl -n istio-system patch service istio-ingressgateway --patch "$(cat<<EOFmetadata:annotations:service.beta.kubernetes.io/aws-load-balancer-ssl-cert: <<ARN_OF_CERTIFICATE>>service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcpservice.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "3600"EOF)"
+$ cat acm_ingress.patch 
+metadata: 
+  annotations: 
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-west-2:767397805077:certificate/59d0eb8a-db3e-4731-94bd-5f07e523184c 
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "3600"
 ```
 
+Next, patch the service to add the annotations with this command:
+```
+$ kubectl -n istio-ingress patch service istio-ingress --patch-file acm_ingress.patch                                               
+service/istio-ingress patched
+```
+
+Finally, check the service using describe to see if there are any errors:
+```
+$ kubectl describe svc -n istio-ingress                                                                                                  
+Name:                     istio-ingress
+Namespace:                istio-ingress
+Labels:                   app=istio-ingress
+<snip>
+Events:
+  Type     Reason             Age   From     Message
+  ----     ------             ----  ----     -------
+  Normal   SuccessfullyReconciled  63s  service  Successfully reconciled
+```
