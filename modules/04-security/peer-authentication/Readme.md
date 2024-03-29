@@ -185,13 +185,48 @@ $ kubectl -n istio-ingress patch service istio-ingress --patch-file acm_ingress.
 service/istio-ingress patched
 ```
 
-Finally, check the service using describe to see if there are any errors:
+Finally, check the service using describe to see the annotation and notice if there are any errors:
 ```
 $ kubectl describe svc -n istio-ingress                                                                                                  
 Name:                     istio-ingress
 Namespace:                istio-ingress
 Labels:                   app=istio-ingress
-<snip>
+                          app.kubernetes.io/managed-by=Helm
+                          app.kubernetes.io/name=istio-ingress
+                          app.kubernetes.io/version=1.20.2
+                          helm.sh/chart=gateway-1.20.2
+                          istio=ingressgateway
+Annotations:              meta.helm.sh/release-name: istio-ingress
+                          meta.helm.sh/release-namespace: istio-ingress
+                          service.beta.kubernetes.io/aws-load-balancer-attributes: load_balancing.cross_zone.enabled=true
+                          service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+                          service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 3600
+                          service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+                          service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+                          service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-1:767397805077:certificate/67e0998c-7a7c-4059-93ab-150aecf3f106
+                          service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
+                          service.beta.kubernetes.io/aws-load-balancer-type: external
+Selector:                 app=istio-ingress,istio=ingressgateway
+Type:                     LoadBalancer
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       172.20.58.1
+IPs:                      172.20.58.1
+LoadBalancer Ingress:     k8s-istioing-istioing-dc506af4a2-d85559e68d4a31fd.elb.us-east-1.amazonaws.com
+Port:                     status-port  15021/TCP
+TargetPort:               15021/TCP
+NodePort:                 status-port  32486/TCP
+Endpoints:                10.0.12.167:15021
+Port:                     http2  80/TCP
+TargetPort:               80/TCP
+NodePort:                 http2  30979/TCP
+Endpoints:                10.0.12.167:80
+Port:                     https  443/TCP
+TargetPort:               443/TCP
+NodePort:                 https  31160/TCP
+Endpoints:                10.0.12.167:443
+Session Affinity:         None
+External Traffic Policy:  Cluster
 Events:
   Type     Reason             Age   From     Message
   ----     ------             ----  ----     -------
