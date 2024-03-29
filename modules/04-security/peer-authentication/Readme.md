@@ -167,3 +167,9 @@ NAME            TYPE           CLUSTER-IP    EXTERNAL-IP                        
 istio-ingress   LoadBalancer   172.20.58.1   k8s-istioing-istioing-dc506af4a2-d85559e68d4a31fd.elb.us-east-1.amazonaws.com   15021:32486/TCP,80:30979/TCP,443:31160/TCP   31d
 ```
 
+Next, we need to add the following annotations to the service. Create a file with the following information, copying in the ARN of your certificate:
+
+```
+kubectl -n istio-system patch service istio-ingressgateway --patch "$(cat<<EOFmetadata:annotations:service.beta.kubernetes.io/aws-load-balancer-ssl-cert: <<ARN_OF_CERTIFICATE>>service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcpservice.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "3600"EOF)"
+```
+
