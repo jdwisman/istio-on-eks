@@ -156,3 +156,14 @@ First, we need a Certificate Authority. If you don't already have one, you can e
 
 <img width="1093" alt="Screenshot 2024-03-29 at 2 25 25 PM" src="https://github.com/jdwisman/istio-on-eks/assets/71530829/b488137b-5df7-41e1-b685-9793af8ef745">
 
+After you have a working CA, go to Amazon Certificate Manager (ACM) in the console and choose "Request a Certificate". Choose "Request a Private Certificate" if you are just testing this. Select your Certificate Authority, give the certificate a name, and then choose "Request". The certificate should be available and you will see it in the console like this:
+
+<img width="1048" alt="Screenshot 2024-03-29 at 2 31 13 PM" src="https://github.com/jdwisman/istio-on-eks/assets/71530829/f88f9cd7-5e54-4de4-9ce9-6184be859e44">
+
+Now we need to annotate our ingressgateway so that it will use the certificate from ACM. For this, let's first get the information about the ingress service like this:
+```
+$ kubectl get svc -n istio-ingress                                                                                                       
+NAME            TYPE           CLUSTER-IP    EXTERNAL-IP                                                                     PORT(S)                                      AGE
+istio-ingress   LoadBalancer   172.20.58.1   k8s-istioing-istioing-dc506af4a2-d85559e68d4a31fd.elb.us-east-1.amazonaws.com   15021:32486/TCP,80:30979/TCP,443:31160/TCP   31d
+```
+
